@@ -34,22 +34,22 @@ class DataCollector:
                  ===============================================================
                  """)
         
-        if not os.path.exists("database"):
-            self.log("generating ./database")
-            makedirs("database")
+        if not os.path.exists("Stock-Price-Database"):
+            self.log("generating ./Stock-Price-Database")
+            makedirs("Stock-Price-Database")
             
         self.read_ticker()
         
     def read_ticker(self, indentation = ""):
         try:
-            self.log(indentation + "trying to read database/tickers.json")
-            with open("database/tickers.json", encoding="utf-8") as tkrs:
+            self.log(indentation + "trying to read Stock-Price-Database/tickers.json")
+            with open("Stock-Price-Database/tickers.json", encoding="utf-8") as tkrs:
                 self.tickers = load(tkrs)
         except:
             self.log(indentation + "failed to read")
-            self.log(indentation + "generating database/tickers.json")
+            self.log(indentation + "generating Stock-Price-Database/tickers.json")
             self.tickers = dict()
-            with open("database/tickers.json", "w", encoding="utf-8") as tkrs:
+            with open("Stock-Price-Database/tickers.json", "w", encoding="utf-8") as tkrs:
                 dump(self.tickers, tkrs, indent=2, ensure_ascii=False)
 
         self.log(indentation + "done reading ticker")
@@ -87,8 +87,8 @@ class DataCollector:
                              {indentation} + ===============================================================
                              {indentation}""")
 
-        self.log(indentation + "saving tickers to database/tickers.json")
-        with open("database/tickers.json", "w", encoding="utf-8") as tkrs:
+        self.log(indentation + "saving tickers to Stock-Price-Database/tickers.json")
+        with open("Stock-Price-Database/tickers.json", "w", encoding="utf-8") as tkrs:
             dump(ticker_name, tkrs, indent=2, ensure_ascii=False)
 
         self.log(indentation + "done updating ticker")
@@ -96,7 +96,7 @@ class DataCollector:
         
     def update_price(self, ticker, indentation = ""):
         self.log(indentation + f"updating prices of {ticker}({self.tickers[ticker]})")
-        path = f"database/{ticker}.csv"
+        path = f"Stock-Price-Database/{ticker}.csv"
         has_file = os.path.exists(path)
         if has_file:
             df = pd.read_csv(path)
@@ -133,7 +133,7 @@ class DataCollector:
                 
             sleep(1)
             
-        df.to_csv(f"database/{ticker}.csv", index=(not has_file))
+        df.to_csv(f"Stock-Price-Database/{ticker}.csv", index=(not has_file))
         self.log(indentation + f"done updating prices of {ticker}({self.tickers[ticker]})")
         self.log(indentation)
         

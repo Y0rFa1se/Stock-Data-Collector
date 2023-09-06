@@ -23,7 +23,7 @@ class DataCollector:
         else:
             self.log = print
             
-        self.oldest_date = date(2023, 5, 1)
+        self.oldest_date = date(1995, 5, 1)
         self.oldest_date_string = date_to_string(self.oldest_date)
         self.today = date.today()
         self.today_string = date_to_string(self.today)

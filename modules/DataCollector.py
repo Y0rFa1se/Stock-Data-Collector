@@ -29,9 +29,9 @@ class DataCollector:
         self.today_string = date_to_string(self.today)
         
         self.log("""
-                 ===============================================================
-                 Data Collector
-                 ===============================================================
+===============================================================
+Data Collector
+===============================================================
                  """)
         
         if not os.path.exists("Stock-Price-Database"):
@@ -65,11 +65,11 @@ class DataCollector:
             
             except:
                 self.log(f"""{indentation}
-                         {indentation} + ===============================================================
-                         {indentation} + Error occured
-                         {indentation} + restarting
-                         {indentation} + ===============================================================
-                         {indentation}""")
+{indentation} ===============================================================
+{indentation} Error occured
+{indentation} restarting
+{indentation} ===============================================================
+{indentation}""")
                 
         ticker_name = dict()
         self.log(indentation + "collecting tickers' name")
@@ -81,11 +81,11 @@ class DataCollector:
                 
                 except:
                     self.log(f"""{indentation}
-                             {indentation} + ===============================================================
-                             {indentation} + Error occured
-                             {indentation} + restarting
-                             {indentation} + ===============================================================
-                             {indentation}""")
+{indentation} ===============================================================
+{indentation} Error occured
+{indentation} restarting
+{indentation} ===============================================================
+{indentation}""")
 
         self.log(indentation + "saving tickers to Stock-Price-Database/tickers.json")
         with open("Stock-Price-Database/tickers.json", "w", encoding="utf-8") as tkrs:
@@ -104,6 +104,7 @@ class DataCollector:
             ld = date(y, m, d)
             last_date_string = date_to_string(ld + relativedelta(days=1))
             last_date = string_to_date(last_date_string)
+            df.set_index("날짜", inplace=True)
         else:
             df = pd.DataFrame()
             last_date_string = self.oldest_date_string
@@ -116,6 +117,7 @@ class DataCollector:
             
             try:
                 prices = stock.get_market_ohlcv(last_date_string, next_date_string, ticker)
+                prices.index = prices.index.strftime("%Y-%m-%d")
                 
                 if not prices.empty:
                     df = pd.concat([df, prices], ignore_index=False)
@@ -125,15 +127,15 @@ class DataCollector:
                 
             except:
                 self.log(f"""{indentation}
-                         {indentation} + ===============================================================
-                         {indentation} + Error occured
-                         {indentation} + restarting
-                         {indentation} + ===============================================================
-                         {indentation}""")
+{indentation} ===============================================================
+{indentation} Error occured
+{indentation} restarting
+{indentation} ===============================================================
+{indentation}""")
                 
             sleep(1)
             
-        df.to_csv(f"Stock-Price-Database/{ticker}.csv", index=(not has_file))
+        df.to_csv(f"Stock-Price-Database/{ticker}.csv", index=True)
         self.log(indentation + f"done updating prices of {ticker}({self.tickers[ticker]})")
         self.log(indentation)
         
